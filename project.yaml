@@ -1,0 +1,70 @@
+version: '3.0'
+
+expectations:
+  population_size: 10000
+
+actions:
+
+  
+  generate_study_population:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2021-06-01 to 2021-12-01 by month" --output-dir=output
+    outputs:
+      highly_sensitive:
+        cohort: output/input_*.csv
+
+  generate_study_population_ethnicity:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_ethnicity --output-dir=output
+    outputs:
+      highly_sensitive:
+        cohort: output/input_ethnicity.csv
+
+  join_ethnicity:
+    run: python:latest python analysis/join_ethnicity.py
+    needs: [generate_study_population, generate_study_population_ethnicity]
+    outputs:
+      highly_sensitive:
+        cohort: output/input*.csv
+
+  generate_study_population_practice_count:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_practice_count --output-dir=output
+    outputs:
+      highly_sensitive:
+        cohort: output/input_practice_count.csv
+
+  
+  generate_measures:
+      run: cohortextractor:latest generate_measures --study-definition study_definition --output-dir=output
+      needs: [join_ethnicity]
+      outputs:
+        moderately_sensitive:
+          measure_csv: output/measure_*.csv
+
+  generate_measure_ethnicity:
+    run: python:latest python analysis/generate_measure_ethnicity.py
+    needs: [join_ethnicity]
+    outputs:
+      moderately_sensitive:
+        measure: output/measure_ethnicity.csv
+
+  get_patient_count:
+    run: python:latest python analysis/get_patients_counts.py
+    needs: [generate_study_population]
+    outputs:
+      moderately_sensitive:
+        text: output/patient_count.json
+
+  create_notebook:
+    run: python:latest python analysis/create_notebook.py
+    needs: [get_patient_count, join_ethnicity]
+    outputs:
+      moderately_sensitive:
+        notebook: analysis/SRO_Notebook.ipynb
+
+
+  generate_notebook:
+    run: jupyter:latest jupyter nbconvert /workspace/analysis/SRO_Notebook.ipynb --execute --to html --output-dir=/workspace/output --ExecutePreprocessor.timeout=86400 --no-input
+    needs: [create_notebook, generate_measures, generate_measure_ethnicity, generate_study_population_practice_count, generate_study_population, join_ethnicity]
+    outputs:
+      moderately_sensitive:
+        notebook: output/SRO_Notebook.html
+        

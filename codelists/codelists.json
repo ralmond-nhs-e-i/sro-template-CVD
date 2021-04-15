@@ -1,0 +1,22 @@
+{
+  "files": {
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/2020-04-27",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "downloaded_at": "2021-04-12 09:28:36.527864Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    },
+    "opensafely-learning-disabilities.csv": {
+      "id": "opensafely/learning-disabilities/2020-07-06",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/learning-disabilities/2020-07-06/",
+      "downloaded_at": "2021-04-13 15:03:59.415279Z",
+      "sha": "ab5b5f60e8525af5898ec1066fc820501b8e5e29"
+    },
+    "opensafely-atrial-fibrillation-clinical-finding.csv": {
+      "id": "opensafely/atrial-fibrillation-clinical-finding/2020-07-09",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/atrial-fibrillation-clinical-finding/2020-07-09/",
+      "downloaded_at": "2021-04-15 08:38:26.280641Z",
+      "sha": "edccc1a96570988b7e92a7a6e44cdee70a0ac179"
+    }
+  }
+}
